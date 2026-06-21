@@ -1,0 +1,41 @@
+# Single-process app (FastAPI backend serving the built React dashboard) on
+# port 8000. SQLite by default (persisted in the cm-data volume). To use
+# PostgreSQL instead, uncomment the `db` service and the DATABASE_URL override,
+# and start with:  docker compose --profile postgres up --build
+services:
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      # Override these for any real use (startup refuses defaults when
+      # PRODUCTION=true). See backend/.env.example for the full list.
+      PRODUCTION: "false"
+      JWT_SECRET: "change-me-jwt-secret"
+      API_KEY: "change-me-dev-key"
+      ADMIN_USERNAME: "admin"
+      ADMIN_PASSWORD: "admin123"
+      DATABASE_URL: "sqlite:////data/classroom.db"
+      # For PostgreSQL (with the db service below):
+      # DATABASE_URL: "postgresql+psycopg2://classroom:classroom@db:5432/classroom"
+    volumes:
+      - cm-data:/data
+      # Mount downloaded vision models to enable real recognition:
+      # - ./backend/models:/app/backend/models:ro
+    restart: unless-stopped
+    # depends_on: [db]   # uncomment when using PostgreSQL
+
+  # db:
+  #   image: postgres:16-alpine
+  #   profiles: ["postgres"]
+  #   environment:
+  #     POSTGRES_USER: classroom
+  #     POSTGRES_PASSWORD: classroom
+  #     POSTGRES_DB: classroom
+  #   volumes:
+  #     - cm-pgdata:/var/lib/postgresql/data
+  #   restart: unless-stopped
+
+volumes:
+  cm-data:
+  # cm-pgdata:

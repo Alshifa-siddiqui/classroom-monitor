@@ -1,0 +1,14 @@
+**/.git
+**/.venv
+**/venv
+**/__pycache__
+**/*.pyc
+**/.pytest_cache
+backend/classroom.db
+backend/*.db
+backend/models/*
+!backend/models/.gitkeep
+frontend/node_modules
+frontend/dist
+docs/screenshots
+*.md
